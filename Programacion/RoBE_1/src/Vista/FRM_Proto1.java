@@ -5,19 +5,69 @@
  */
 package Vista;
 
+import Controlador.Controlador_FRM_Proto1;
+import Controlador.Hilos;
+
 /**
  *
  * @author braghoick
  */
-public class Proto1 extends javax.swing.JFrame {
+public class FRM_Proto1 extends javax.swing.JFrame {
 
     /**
      * Creates new form Proto1
      */
-    public Proto1() {
+    
+    Hilos hilos;
+    Controlador_FRM_Proto1 controlador_FRM_Proto1;
+    
+    public String direccion="Estatico";
+    public String salto="Suelo";
+    
+    
+    
+    
+    
+    public FRM_Proto1() {
         initComponents();
+        
+        setSize(1280, 720);
+        hilos=new Hilos(this);
+        controlador_FRM_Proto1=new Controlador_FRM_Proto1(this);
+        this.addKeyListener(controlador_FRM_Proto1);
+        
+        verificarDireccion();
+        
+        hilos.start();
+    }
+    
+    public void verificarDireccion(){
+    
+        if(direccion.equals("Derecha")){
+        
+            JL_Personaje.setLocation(JL_Personaje.getX()+10, JL_Personaje.getY());
+        }
+        
+        if(JL_Personaje.getX()>getX()-1){
+        
+           direccion="Estatico";
+        }
+        
+        if(direccion.equals("Izquierda")){
+        
+            JL_Personaje.setLocation(JL_Personaje.getX()-10, JL_Personaje.getY());
+        }
+        
+//        if(direccion.equals("Estatico")){
+//        
+//            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY());
+//        }
+        
     }
 
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,8 +77,13 @@ public class Proto1 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        JL_Personaje = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        JL_Personaje.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/IMG/Prueba1.png"))); // NOI18N
+        getContentPane().add(JL_Personaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 410, 40, 50));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -50,24 +105,26 @@ public class Proto1 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Proto1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRM_Proto1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Proto1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRM_Proto1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Proto1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRM_Proto1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Proto1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRM_Proto1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Proto1().setVisible(true);
+                new FRM_Proto1().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel JL_Personaje;
     // End of variables declaration//GEN-END:variables
 }
