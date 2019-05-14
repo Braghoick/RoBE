@@ -5,7 +5,8 @@
  */
 package Controlador;
 
-import Vista.FRM_Proto1;
+
+import Vista.FRM_Proto2;
 
 /**
  *
@@ -13,11 +14,11 @@ import Vista.FRM_Proto1;
  */
 public class Hilos extends Thread{
     
-    FRM_Proto1 fRM_Proto1;
+    FRM_Proto2 fRM_Proto2;
     
-    public Hilos(FRM_Proto1 fRM_Proto1){
+    public Hilos(FRM_Proto2 fRM_Proto2){
     
-        this.fRM_Proto1=fRM_Proto1;
+        this.fRM_Proto2=fRM_Proto2;
     }
     
     public void run(){
@@ -26,9 +27,8 @@ public class Hilos extends Thread{
         
             while (true) {                
                 
-                fRM_Proto1.verificarDireccion();
-                sleep(10);
-                //fRM_Proto1.direccion="Estatico";
+                fRM_Proto2.movimientoPersonaje();
+                sleep(30);
             }
             
         }
