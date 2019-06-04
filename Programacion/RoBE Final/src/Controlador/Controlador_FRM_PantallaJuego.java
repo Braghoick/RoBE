@@ -28,31 +28,21 @@ public class Controlador_FRM_PantallaJuego implements ActionListener, KeyListene
     
     
     
-    
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void actionPerformed(ActionEvent e) {}
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
+    public void keyTyped(KeyEvent e) {}
+    
+    public void keyReleased(KeyEvent e) {}
+    
     public void keyPressed(KeyEvent e) {
         
         if(e.getKeyCode()==32){
         
-            fRM_PantallaJuego.posicionPersonaje="Aire";
+            System.out.println("Hola");
+            fRM_PantallaJuego.personaje="Salta";
         }
         
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }

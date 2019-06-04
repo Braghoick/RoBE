@@ -12,6 +12,7 @@ import Controlador.Controlador_Hilos;
  *
  * @author braghoick
  */
+
 public class FRM_PantallaJuego extends javax.swing.JFrame {
 
     /**
@@ -21,60 +22,119 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
     Controlador_Hilos controlador_Hilos;
     Controlador_FRM_PantallaJuego controlador_FRM_PantallaJuego;
     
-    public String posicionPersonaje="Piso";
+    public String personaje="Base";
+    
+    public int xPredefItemUp=810;
+    public int velocidad=10;
+    public int contadorTiempo;
+    public int tiempoLimite=60;
     
     public FRM_PantallaJuego() {
         initComponents();
         
-        setSize(1280, 740);
+        setSize(1280, 800);
         
+        devolverPersonaje();
         controlador_Hilos=new Controlador_Hilos(this);
         controlador_FRM_PantallaJuego= new Controlador_FRM_PantallaJuego(this);
         this.addKeyListener(controlador_FRM_PantallaJuego);
         
         controlador_Hilos.start();
-        
-        
+
     }
     
     public void moverFondo(){
     
+        
         if(JL_Fondo.getX()>-8960){
         
-            JL_Fondo.setLocation(JL_Fondo.getX()-5, JL_Fondo.getY());
+            JL_Fondo.setLocation(JL_Fondo.getX()-velocidad, JL_Fondo.getY());
         }
         
         else{
         
             JL_Fondo.setLocation(0, JL_Fondo.getY());
+            velocidad++;
         }
+          
+    }
+    
+    public String devolverPersonaje(){
+    
+        return personaje;
+        
+    }
+    
+    public void moverItems(){
+    
+        if(JL_PowerUp.getX()>-8960){
+        
+            JL_PowerUp.setLocation(JL_PowerUp.getX()-5, JL_PowerUp.getY());
+        }
+        
+        else{
+        
+            JL_PowerUp.setLocation(xPredefItemUp, JL_PowerUp.getY());
+        }
+        
+        if(JL_PowerDown.getX()>-8960){
+        
+            JL_PowerDown.setLocation(JL_PowerDown.getX()-5, JL_PowerDown.getY());
+        }
+        
+        else{
+        
+            JL_PowerDown.setLocation(xPredefItemUp, JL_PowerDown.getY());
+        }
+        
+        System.out.println(contadorTiempo);
+        
+        if(contadorTiempo==tiempoLimite){
+        
+            velocidad+=1;
+            tiempoLimite+=60;
+            
+        }
+        
+        contadorTiempo++;
+        
     }
     
     public void verificarEstado(){
     
-        if(posicionPersonaje.equals("Aire")){
+        if(personaje.equals("Salta")){
         
-            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY()-20);
+            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY()-30);
         }
         
         if(JL_Personaje.getY()<=300){
         
-            posicionPersonaje="Caida";
+            personaje="Despliegue";
         }
         
-        if(posicionPersonaje.equals("Caida")){
-            
-            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY()+30 );
+        if(personaje.equals("Despliegue")){
+        
+            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY());
         }
         
-        if(JL_Personaje.getY()>=450){
+        if(JL_Personaje.getY()<=450 && personaje.equals("Despliegue")){
         
-            posicionPersonaje="Piso";
+            personaje="Baja";
+        }
+   
+        if(personaje.equals("Baja")){
+              
+            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY()+20);
         }
         
-        if(posicionPersonaje.equals("Piso")){
+        if(JL_Personaje.getY()>=570){
         
-            JL_Personaje.setLocation(JL_Personaje.getX(), 450);
+            personaje="Base";
+        }
+        
+        if(personaje.equals("Base")){
+        
+            JL_Personaje.setLocation(JL_Personaje.getX(), 570);
         }
     }
     
@@ -90,6 +150,8 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        JL_PowerDown = new javax.swing.JLabel();
+        JL_PowerUp = new javax.swing.JLabel();
         JL_Enemigo = new javax.swing.JLabel();
         JL_Personaje = new javax.swing.JLabel();
         JL_Fondo = new javax.swing.JLabel();
@@ -99,14 +161,26 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        JL_PowerDown.setBackground(new java.awt.Color(51, 51, 51));
+        JL_PowerDown.setForeground(new java.awt.Color(0, 0, 0));
+        JL_PowerDown.setText("Item Power Down");
+        getContentPane().add(JL_PowerDown, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 610, 74, 74));
+
+        JL_PowerUp.setBackground(new java.awt.Color(51, 51, 51));
+        JL_PowerUp.setForeground(new java.awt.Color(0, 0, 0));
+        JL_PowerUp.setText("Item Power Up");
+        getContentPane().add(JL_PowerUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 610, 74, 74));
+        JL_PowerUp.getAccessibleContext().setAccessibleDescription("");
+
         JL_Enemigo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/MrHungry2.gif"))); // NOI18N
-        getContentPane().add(JL_Enemigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 182, -1, -1));
+        getContentPane().add(JL_Enemigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, -1, -1));
 
         JL_Personaje.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Avo2.gif"))); // NOI18N
-        getContentPane().add(JL_Personaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(445, 450, -1, -1));
+        getContentPane().add(JL_Personaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 570, -1, -1));
 
-        JL_Fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Prueba fondo.jpg"))); // NOI18N
-        getContentPane().add(JL_Fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 10240, 720));
+        JL_Fondo.setBackground(new java.awt.Color(255, 255, 255));
+        JL_Fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Prueba fondo2.jpg"))); // NOI18N
+        getContentPane().add(JL_Fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 10240, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -150,5 +224,7 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
     private javax.swing.JLabel JL_Enemigo;
     private javax.swing.JLabel JL_Fondo;
     private javax.swing.JLabel JL_Personaje;
+    private javax.swing.JLabel JL_PowerDown;
+    private javax.swing.JLabel JL_PowerUp;
     // End of variables declaration//GEN-END:variables
 }
