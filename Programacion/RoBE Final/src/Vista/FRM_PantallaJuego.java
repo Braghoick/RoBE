@@ -7,6 +7,7 @@ package Vista;
 
 import Controlador.Controlador_FRM_PantallaJuego;
 import Controlador.Controlador_Hilos;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -25,12 +26,20 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
     public String personaje="Base";
     
     public int xPredefItemUp=810;
-    public int velocidad=10;
+    public int velocidad=20;
+    public int movimiento=30;
+    public int caida=20;
+    
     public int contadorTiempo;
+    public int contadorVelocidad;
+    
     public int tiempoLimite=60;
+    public boolean colisionPowerUp=false;
+    public boolean colisionPowerDown=false;
     
     public FRM_PantallaJuego() {
         initComponents();
+        
         
         setSize(1280, 800);
         
@@ -56,38 +65,6 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
             JL_Fondo.setLocation(0, JL_Fondo.getY());
             velocidad++;
         }
-          
-    }
-    
-    public String devolverPersonaje(){
-    
-        return personaje;
-        
-    }
-    
-    public void moverItems(){
-    
-        if(JL_PowerUp.getX()>-8960){
-        
-            JL_PowerUp.setLocation(JL_PowerUp.getX()-5, JL_PowerUp.getY());
-        }
-        
-        else{
-        
-            JL_PowerUp.setLocation(xPredefItemUp, JL_PowerUp.getY());
-        }
-        
-        if(JL_PowerDown.getX()>-8960){
-        
-            JL_PowerDown.setLocation(JL_PowerDown.getX()-5, JL_PowerDown.getY());
-        }
-        
-        else{
-        
-            JL_PowerDown.setLocation(xPredefItemUp, JL_PowerDown.getY());
-        }
-        
-        System.out.println(contadorTiempo);
         
         if(contadorTiempo==tiempoLimite){
         
@@ -97,14 +74,99 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
         }
         
         contadorTiempo++;
+          
+    }
+    
+    public String devolverPersonaje(){
+    
+        return personaje;
+        
+    }
+    
+    public int randomObjetos(){
+    
+        
+        int objeto = (int) Math.floor(Math.random()*(6000-2000+1)+2000);  // Valor entre M y N, ambos incluidos.
+        
+        return objeto;
+    }
+    
+    public void powerUp(){
+    
+          JL_PowerUp.setLocation(JL_PowerUp.getX()-velocidad, JL_PowerUp.getY());
+           
+          if(colisionPowerUp==true || JL_Personaje.getX()>JL_PowerUp.getX()+1000){
+          
+              JL_PowerUp.setLocation(JL_PowerUp.getX()+randomObjetos(), JL_PowerUp.getY());
+              colisionPowerUp=false;
+              
+              if(JL_PowerUp.getX()>10240){
+                
+                    JL_PowerUp.setLocation(JL_PowerUp.getX()-10240, JL_PowerUp.getY());
+                }
+              
+          }
+        
+    }
+    
+    public void powerDown(){
+    
+      
+            JL_PowerDown.setLocation(JL_PowerDown.getX()-velocidad, JL_PowerDown.getY());
+            
+            if(colisionPowerDown==true || JL_Personaje.getX()>JL_PowerDown.getX()+1000){
+            
+                JL_PowerDown.setLocation(JL_PowerDown.getX()+randomObjetos(), JL_PowerDown.getY());
+                colisionPowerDown=false;
+                
+                if(JL_PowerDown.getX()>10240){
+                
+                    JL_PowerDown.setLocation(JL_PowerDown.getX()-10240, JL_PowerDown.getY());
+                }
+            }
+           
+        
+    }
+    
+    public void colisionadores(){
+    
+        
+        //Enemigo
+//        if(JL_Personaje.getX()+150>JL_PowerUp.getX() && JL_Personaje.getX()<JL_PowerUp.getX()+50 && JL_Personaje.getY()+150>JL_PowerUp.getY()){
+//        
+//            System.out.println("Colision");
+//            System.out.println("colisionando");
+//        }
+
+
+        //power Up
+        if(JL_Personaje.getX()+150>JL_PowerUp.getX() && JL_Personaje.getX()<JL_PowerUp.getX()+50 && JL_Personaje.getY()+150>JL_PowerUp.getY()){
+        
+            System.out.println("Colision PowerUp");
+            colisionPowerUp=true;
+        }
+        
+        //powerDown
+        if(JL_Personaje.getX()+150>JL_PowerDown.getX() && JL_Personaje.getX()<JL_PowerDown.getX()+50 && JL_Personaje.getY()+150>JL_PowerDown.getY()){
+        
+            System.out.println("Colision PowerDown");
+            colisionPowerDown=true;
+        }
+        
         
     }
     
     public void verificarEstado(){
     
+        if(contadorVelocidad==contadorTiempo){
+        
+            movimiento+=1;
+            caida+=1;
+        }
+        
         if(personaje.equals("Salta")){
         
-            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY()-30);
+            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY()-movimiento);
         }
         
         if(JL_Personaje.getY()<=300){
@@ -124,7 +186,7 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
    
         if(personaje.equals("Baja")){
               
-            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY()+20);
+            JL_Personaje.setLocation(JL_Personaje.getX(), JL_Personaje.getY()+caida);
         }
         
         if(JL_Personaje.getY()>=570){
@@ -136,6 +198,7 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
         
             JL_Personaje.setLocation(JL_Personaje.getX(), 570);
         }
+        contadorVelocidad++;
     }
     
     
@@ -150,10 +213,13 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        JL_Vineta = new javax.swing.JLabel();
         JL_PowerDown = new javax.swing.JLabel();
         JL_PowerUp = new javax.swing.JLabel();
         JL_Enemigo = new javax.swing.JLabel();
+        JL_SombraE = new javax.swing.JLabel();
         JL_Personaje = new javax.swing.JLabel();
+        JL_SombraP = new javax.swing.JLabel();
         JL_Fondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -161,26 +227,37 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        JL_Vineta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Fondo y Objetos/V1/Recurso 1.png"))); // NOI18N
+        getContentPane().add(JL_Vineta, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 800));
+
         JL_PowerDown.setBackground(new java.awt.Color(51, 51, 51));
         JL_PowerDown.setForeground(new java.awt.Color(0, 0, 0));
-        JL_PowerDown.setText("Item Power Down");
-        getContentPane().add(JL_PowerDown, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 610, 74, 74));
+        JL_PowerDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Objetos de Juego/V1/Recurso 6.png"))); // NOI18N
+        getContentPane().add(JL_PowerDown, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 610, -1, -1));
+        JL_PowerDown.getAccessibleContext().setAccessibleDescription("");
 
         JL_PowerUp.setBackground(new java.awt.Color(51, 51, 51));
         JL_PowerUp.setForeground(new java.awt.Color(0, 0, 0));
+        JL_PowerUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Objetos de Juego/V1/Recurso 4.png"))); // NOI18N
         JL_PowerUp.setText("Item Power Up");
-        getContentPane().add(JL_PowerUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 610, 74, 74));
+        getContentPane().add(JL_PowerUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 610, 50, 50));
         JL_PowerUp.getAccessibleContext().setAccessibleDescription("");
 
-        JL_Enemigo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/MrHungry2.gif"))); // NOI18N
+        JL_Enemigo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Personajes/V1/MrHungry2.gif"))); // NOI18N
         getContentPane().add(JL_Enemigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, -1, -1));
 
-        JL_Personaje.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Avo2.gif"))); // NOI18N
-        getContentPane().add(JL_Personaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 570, -1, -1));
+        JL_SombraE.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Personajes/V1/SombraE.png"))); // NOI18N
+        getContentPane().add(JL_SombraE, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 670, -1, -1));
 
-        JL_Fondo.setBackground(new java.awt.Color(255, 255, 255));
-        JL_Fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Prueba fondo2.jpg"))); // NOI18N
-        getContentPane().add(JL_Fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 10240, -1));
+        JL_Personaje.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Personajes/V1/Avo2.gif"))); // NOI18N
+        JL_Personaje.setToolTipText("");
+        getContentPane().add(JL_Personaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 570, 150, 150));
+
+        JL_SombraP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Personajes/V1/Sombra_1.png"))); // NOI18N
+        getContentPane().add(JL_SombraP, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 700, 100, 25));
+
+        JL_Fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vista/Fondo y Objetos/V1/Fondo final.png"))); // NOI18N
+        getContentPane().add(JL_Fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 10240, 800));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -222,9 +299,12 @@ public class FRM_PantallaJuego extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JL_Enemigo;
-    private javax.swing.JLabel JL_Fondo;
+    public javax.swing.JLabel JL_Fondo;
     private javax.swing.JLabel JL_Personaje;
     private javax.swing.JLabel JL_PowerDown;
     private javax.swing.JLabel JL_PowerUp;
+    private javax.swing.JLabel JL_SombraE;
+    private javax.swing.JLabel JL_SombraP;
+    private javax.swing.JLabel JL_Vineta;
     // End of variables declaration//GEN-END:variables
 }

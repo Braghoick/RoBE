@@ -31,8 +31,10 @@ public class Controlador_Hilos extends Thread{
             while(true){
             
                 fRM_PantallaJuego.moverFondo();
-                fRM_PantallaJuego.moverItems();
+                fRM_PantallaJuego.powerUp();
+                fRM_PantallaJuego.powerDown();
                 fRM_PantallaJuego.verificarEstado();
+                fRM_PantallaJuego.colisionadores();
                 sleep(50);
                 
                
